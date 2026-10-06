@@ -1,10 +1,27 @@
+import { Navigate, Route, Routes } from 'react-router-dom';
+import Layout from '@/components/Layout';
+import ProtectedRoute from '@/components/ProtectedRoute';
+import LoginPage from '@/pages/LoginPage';
+import NotFoundPage from '@/pages/NotFoundPage';
+import PedidoCreatePage from '@/pages/PedidoCreatePage';
+import PedidoEditPage from '@/pages/PedidoEditPage';
+import PedidosListPage from '@/pages/PedidosListPage';
+
 export default function App() {
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="card p-8 text-center">
-        <h1 className="text-2xl font-bold text-brand-700">Tailwind funciona ✅</h1>
-        <button className="btn-primary mt-4">Botón de prueba</button>
-      </div>
-    </div>
+    <Routes>
+      <Route path="/login" element={<LoginPage />} />
+
+      {/* Todo lo de aquí dentro exige sesión y comparte el menú (Layout). */}
+      <Route element={<ProtectedRoute />}>
+        <Route element={<Layout />}>
+          <Route index element={<Navigate to="/pedidos" replace />} />
+          <Route path="/pedidos" element={<PedidosListPage />} />
+          <Route path="/pedidos/nuevo" element={<PedidoCreatePage />} />
+          <Route path="/pedidos/:id/editar" element={<PedidoEditPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Route>
+      </Route>
+    </Routes>
   );
 }
